@@ -1,3 +1,49 @@
+:root {
+    --white: #fff;
+    --grey: #f1f1f1;
+    --hover_grey: #e5e3e3;
+    --dark_font: #4b4b4b;
+    --blue: #47A2FD;
+    --light_font: rgba(30, 30, 30, .5);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    margin: 0;
+    color: black;
+    text-align: center;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--blue);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: var(--blue);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 600;
+}
+
 html {
     font-size: 62.5%;
 }
@@ -5,15 +51,155 @@ html {
 body {
     margin: 0;
     font-size: 1.6rem;
+    background-color: var(--grey);
+    color: var(--dark_font);
+    font-family: lato, sans-serif;
+    line-height: normal;
 }
 
-.form_container {
+.container {
+    padding: clamp(5rem, 5.68vi + 2.73rem, 10rem) 0;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+}
+
+.container .max_width {
+    width: calc(100% - clamp(4rem,2.27vi + 3.09rem,6rem));
+    margin: 0 auto;
+    max-width: 93.75rem;
+}
+
+.form {
+    border-radius: 1rem;
+    background-color: white;
+    padding: 3rem clamp(2rem, 1.14vi + 1.55rem, 3rem) 4rem clamp(2rem, 1.14vi + 1.55rem, 3rem);
     display: flex;
     flex-direction: column;
+    gap: 2rem;
     align-items: center;
-    margin: 10rem 0;
 }
 
-.form_container form {
-    max-width: 100rem;
+.form ul {
+    width: 100%;
+    display: grid;
+    gap: clamp(1.5rem, 0.57vi + 1.27rem, 2rem);
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form span {
+    color: var(--dark_font);
+    font-weight: 600;
+}
+
+.email {
+    line-break: anywhere;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    width: max(30rem, 100%);
+}
+
+.input label {
+    font-weight: 600;
+    font-size: 1.4rem;
+    gap: .3rem;
+}
+
+.input input {
+    border-radius: .5rem;
+    padding: .8rem;
+    border: .1rem solid var(--light_font);
+    color: black;
+    width: 100%;
+}
+
+.form .buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.create_update form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.form .user {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(1.2rem, 0.34vi + 1.06rem, 1.5rem);
+    padding-bottom: 1rem;
+    border: .1rem solid black;
+    border-radius: .8rem;
+}
+
+.buttons.background {
+    justify-content: center;
+}
+
+.form_buttons button,
+.buttons.background button,
+.buttons.background a {
+    background-color: var(--blue);
+    color: white;
+    border-radius: 5rem;
+    padding: clamp(0.6rem, 0.45vi + 0.42rem, 1rem) clamp(1.3rem, 0.23vi + 1.21rem, 1.5rem);
+    line-height: normal;
+    height: fit-content;
+    font-size: 1.4rem;
+    transition: background-color .3s ease;
+}
+
+.form .errors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.found hr {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.found hr:last-of-type {
+    margin-bottom: 0;
+}
+
+.form_buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    button:hover,
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .form_buttons button:hover,
+    .buttons.background button:hover,
+    .buttons.background a:hover {
+        text-decoration: none;
+        background-color: #3c8ad7;
+    }
+}
+
+/* 720px */
+@media screen and (max-width: 45em) {
+    .form ul {
+        grid-template-columns: 1fr;
+    }
 }

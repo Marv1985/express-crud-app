@@ -1,32 +1,46 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <title><%= title %></title>
 </head>
-<body>
-    <%- include("partials/errors.ejs") %>
-
-    <form action="/searchUsers" method="GET" style="display:inline;">
-        <label for="searchName">User Name: </label>
-        <input type="text" name="searchName" id="searchName" required>
-        <button type="submit">Search</button>
-    </form>
+    <body>
     
-    <% if (users && users.length > 0) { %>
-        <% users.forEach(user => { %>
-            <p>ID: <%= user.id %></p>
-            <p>First Name: <%= user.firstname %></p>
-            <p>Last Name: <%= user.lastname %></p>
-            <p>Email: <%= user.email %></p>
-            <hr>
-        <% }) %>
-    <% } else { %>
-        <p>No users found.</p>
-    <% } %>
+        <div class="container">
+            <div class="max_width">
+                <div class="form create_update">
+                    <h1><%= title %></h1>
+                    <%- include("partials/errors.ejs") %>
+                    <form action="/searchUsers" method="GET">
+                        <div class="input">
+                            <label for="searchName">User Name: </label>
+                            <input type="text" name="searchName" id="searchName" required>
+                        </div>
+                        <div class="form_buttons">
+                            <a href="/">Back to home</a>
+                            <button type="submit">Search</button>
+                        </div>
+                    </form>
+                    
+                    <% if (users && users.length > 0) { %>
+                        <div class="found">
+                        <% users.forEach(user => { %>
+                            <p><span>First Name:</span> <%= user.firstname %></p>
+                            <p><span>Last Name:</span> <%= user.lastname %></p>
+                            <p><span>Email:</span> <%= user.email %></p>
+                            <hr>
+                        <% }) %>
+                    <% } else { %>
+                        </div>
+                        <p><%= notFound %></p>
+                    <% } %>
+                        
+                </div>
+            </div> 
+        </div>
     
-    <a href="/">Back to home</a>
-    
-</body>
+    </body>
 </html>

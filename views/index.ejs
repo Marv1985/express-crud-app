@@ -4,39 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+    <title>Express Crud App</title>
 </head>
 <body>
 
-    <h1><%= title %></h1>
-    <ul>
-        <% if (users) {%>
-        <% users.forEach(user => { %>
-            <li>
-                ID: <%= user.id %>, First Name: <%= user.firstname %>, Last Name: <%= user.lastname %>, Email: <%= user.email %>
-                <a href="/<%= user.id %>/update">Update</a>
-            </li>                  
-        <% }); %>
-        <% } %>
-    </ul>
-    <a href="/create">Create a user</a>
-
-    <!-- Delete users -->
-    <% if (users) {%>
-        <ul>
-        <% users.forEach(function(user) { %>
-            <li>ID: <%= user.id %>, First Name: <%= user.firstname %>, Last Name: <%= user.lastname %>, Email: <%= user.email %></li>
-            <a href="/<%= user.id %>/update">Update</a>
-            <!-- This time we're sending a POST request to our route, so we need a form. -->
-            <form action="/<%= user.id %>/delete" method="POST" style="display:inline;">
-            <button type="submit">Delete</button>
-            </form>
-        <% }); %>
-        </ul>
-    <% } %>
-   
-   <a href="/search">Search Users</a>
-  
+    <div class="container">
+        <div class="max_width">
+            <div class="form">
+                <h1><%= title %></h1>
+                <ul>
+                    <% if (users) {%>
+                    <% users.forEach(user => { %>
+                        <div class="user">
+                            <li>
+                                <p><span>First Name:</span> <%= user.firstname %></p>
+                                <p><span>Last Name:</span> <%= user.lastname %></p>
+                                <p class="email"><span>Email:</span> <%= user.email %></p>
+                            </li> 
+                            <div class="buttons">
+                                <a class="update" href="/<%= user.id %>/update">UPDATE</a>
+                                <form action="/<%= user.id %>/delete" method="POST" style="display:inline;">
+                                    <button class="delete" type="submit">DELETE</button>
+                                </form>
+                            </div>   
+                        </div>
+                    <% }); %>
+                    <% } %>
+                </ul>
+                <div class="buttons background">
+                    <a href="/create">CREATE A USER</a>
+                    <a href="/search">SEARCH USERS</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

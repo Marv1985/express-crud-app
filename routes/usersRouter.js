@@ -7,9 +7,9 @@ usersRouter.get("/", usersController.getUsernames);
 usersRouter.get("/create", usersController.createUsernameGet);
 usersRouter.post("/create", usersController.createUsernamePost);
 usersRouter.get("/:id/update", usersController.getUsernameFromDatabase);
-usersRouter.get("/search", (req, res) => res.render("search", {title: "Search for a user", users: []}));
+usersRouter.get("/search", (req, res) => res.render("search", {title: "Search for a user", users: [], notFound: ''}));
 usersRouter.get("/searchUsers", usersController.usersSearchGet);
-usersRouter.post("/:id/update", usersController.updateUsernamePost);
+usersRouter.post("/:id/updateuser", usersController.updateUsernamePost);
 usersRouter.post("/:id/delete", usersController.deleteUsernameFromDatabase);
 
 

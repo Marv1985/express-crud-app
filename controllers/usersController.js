@@ -30,7 +30,7 @@ const searchQueryValidation = [
 const getUsernames = asyncHandler( async (req, res) => {
   const usernames = await db.getAllUsernames();
   res.render("index", {
-      title: "Create user",
+      title: "List of all users",
       users: usernames
     });
 });
@@ -38,7 +38,7 @@ const getUsernames = asyncHandler( async (req, res) => {
 // Render create page
 const createUsernameGet = asyncHandler( async (req, res) => {
   res.render("createUser", {
-      title: "Create user",
+      title: "Create a user",
       user: []
     });
 });
@@ -51,8 +51,8 @@ const createUsernamePost = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("createUser", {
-        title: "created for a user",
         errors: errors.array(),
+        title: "Create a user",
         user: []
       });
     }
@@ -72,11 +72,11 @@ const deleteUsernameFromDatabase = asyncHandler( async (req, res) => {
 const getUsernameFromDatabase = asyncHandler( async (req, res) => {
   const username = await db.getUsername(req.params.id);
   if (!username || username.length === 0) {
-    return res.status(404).send("User not found");
+    return res.status(400).send("User not found");
   }
   const user = username[0]
-  res.render("createUser", {
-    title: "Edit user",
+  res.render("updateUser", {
+    title: "Update user",
     user
   });
 });
@@ -88,14 +88,14 @@ const updateUsernamePost = [
      // Check for validation errors
      const errors = validationResult(req);
      if (!errors.isEmpty()) {
-       return res.status(400).render("createUser", {
-         title: "edit for a user",
-         errors: errors.array(),
-         user: []
+        return res.status(400).render("updateUser", {
+        errors: errors.array(),
+        title: "Update user",
+        user: []
        });
      }
     const { firstName, lastName, email } = req.body;
-    await db.updateUsername(req.params.id, { firstName, lastName, email });
+    await db.updateUsername(req.params.id, firstName, lastName, email);
     res.redirect("/");
   })
 ]
@@ -103,25 +103,35 @@ const updateUsernamePost = [
 // Update a user
 const usersSearchGet = [
   searchQueryValidation,
-  asyncHandler( async (req, res) => {
+  asyncHandler(async (req, res) => {
     const users = await db.searchUser(req.query.searchName);
-    console.log(users)
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("search", {
         title: "Search for a user",
         errors: errors.array(),
-        users: []
+        users: [],
+        notFound: ''
+      });
+    }
+
+    if (users.length === 0) { // Prefer `users.length === 0` instead of `users == ''`
+      return res.render("search", {
+        users: [],
+        title: "Search for a user",
+        notFound: 'User not found'
       });
     }
     
-    res.render("search", {
-        title: "Search for a user",
-        users: users,
-      });
+    return res.render("search", {
+      users: users,
+      title: "Search for a user",
+      notFound: ''
+    });
   })
-]
+];
+
 
 
 module.exports = {

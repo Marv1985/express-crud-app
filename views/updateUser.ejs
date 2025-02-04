@@ -1,18 +1,39 @@
-<!-- views/updateUser.ejs -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-  </head>
-<body>
-  <h1><%= title %></h1>
-  <%- include("partials/errors.ejs") %>
-  <form action="/<%= user.id %>/update" method="POST">
-    <input type="text" name="firstName" value="<%= user.firstName %>" required>
-    <input type="text" name="lastName" value="<%= user.lastName %>" required>
-    <input type="text" name="email" value="<%= user.email %>" required>
-    <button type="submit">Update User</button>
-  </form>
-  <a href="/">Back to home</a>
-</body>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/styles.css">
+        <title><%= title %></title>
+    </head>
+  <body>
+
+      <div class="container">
+        <div class="max_width">
+            <div class="form create_update">
+              <h1><%= title %></h1>
+              <%- include("partials/errors.ejs") %>
+              <form action="/<%= user.id %>/updateuser" method="POST">
+                <div class="input">
+                  <label for="firstName">First Name</label>
+                  <input type="text" name="firstName" id="firstName" value="<%= user.firstname %>" required>
+                </div>
+                <div class="input">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" name="lastName" id="lastName" value="<%= user.lastname %>" required>
+                </div>
+                <div class="input">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email" value="<%= user.email %>" required>
+                </div>
+                <div class="form_buttons">
+                  <a href="/">BACK TO HOME</a>
+                  <button type="submit">UPDATE USER</button>
+                </div>
+              </form>
+          </div>
+        </div> 
+      </div>
+
+    </body>
 </html>

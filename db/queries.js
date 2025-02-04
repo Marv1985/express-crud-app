@@ -19,8 +19,9 @@ async function getUsername(id) {
 }
 
 async function updateUsername(id, firstname, lastname, email) {
-  await pool.query("UPDATE usernames SET ($1, $2, $3, $4) WHERE id = ($1)", [id, firstname, lastname, email]);
+  await pool.query( "UPDATE usernames SET firstname = $2, lastname = $3, email = $4 WHERE id = $1", [id, firstname, lastname, email]);
 }
+
 
 async function searchUser(searchName) {
   const { rows } = await pool.query("SELECT firstname, lastname, email, id FROM usernames WHERE LOWER(firstname) = ($1)", [searchName]);
