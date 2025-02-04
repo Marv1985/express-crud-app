@@ -18,90 +18,110 @@ const validateUser = [
     .withMessage('A valid email is required')
 ];
 
+// GET Validation (check query parameters)
+const searchQueryValidation = [
+  query('searchName')
+    .trim()
+    .isAlpha().withMessage(`First name ${alphaErr}`)
+    .isLength({ min: 1, max: 15 }).withMessage(`First name ${lengthErr}`),
+];
 
 // Get all users
-async function getUsernames(req, res) {
+const getUsernames = asyncHandler( async (req, res) => {
   const usernames = await db.getAllUsernames();
   res.render("index", {
       title: "Create user",
       users: usernames
     });
-}
+});
 
 // Render create page
-async function createUsernameGet(req, res) {
+const createUsernameGet = asyncHandler( async (req, res) => {
   res.render("createUser", {
       title: "Create user",
       user: []
     });
-}
+});
 
 // Create a user
-async function createUsernamePost(req, res) {
-  const { firstName, lastName, email } = req.body;
-  await db.insertUsername(firstName, lastName, email);
-  res.redirect("/");
-}
+const createUsernamePost = [
+  validateUser,
+  asyncHandler( async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("createUser", {
+        title: "created for a user",
+        errors: errors.array(),
+        user: []
+      });
+    }
+    const { firstName, lastName, email } = req.body;
+    await db.insertUsername(firstName, lastName, email);
+    res.redirect("/");
+  })
+]
 
 // Delete a user
-async function deleteUsernameFromDatabase(req, res) {
+const deleteUsernameFromDatabase = asyncHandler( async (req, res) => {
   await db.deleteUsername(req.params.id);
   res.redirect("/");
-}
+});
 
 // Get a user
-async function getUsernameFromDatabase(req, res) {
+const getUsernameFromDatabase = asyncHandler( async (req, res) => {
   const username = await db.getUsername(req.params.id);
-
   if (!username || username.length === 0) {
     return res.status(404).send("User not found");
   }
-
   const user = username[0]
   res.render("createUser", {
     title: "Edit user",
     user
   });
-}
+});
 
 // Update a user
-async function updateUsernamePost(req, res) {
-  const { firstName, lastName, email } = req.body;
-  await db.updateUsername(req.params.id, { firstName, lastName, email });
-  res.redirect("/");
-}
+const updateUsernamePost = [
+  validateUser,
+  asyncHandler( async (req, res) => {
+     // Check for validation errors
+     const errors = validationResult(req);
+     if (!errors.isEmpty()) {
+       return res.status(400).render("createUser", {
+         title: "edit for a user",
+         errors: errors.array(),
+         user: []
+       });
+     }
+    const { firstName, lastName, email } = req.body;
+    await db.updateUsername(req.params.id, { firstName, lastName, email });
+    res.redirect("/");
+  })
+]
 
 // Update a user
-async function usersSearchGet(req, res) {
-  const users = await db.searchUser(req.query.searchName);
-  console.log(users)
-  res.render("search", {
-      title: "Search for a user",
-      users: users,
-    });
-}
-
-
-// exports.usersSearchGet = [
-//   searchQueryValidation,
-//   asyncHandler((req, res) => {
-//     const user = usersStorage.searchUser(req.query.searchName);
-//     // Check for validation errors
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).render("search", {
-//         title: "Search for a user",
-//         errors: errors.array(),
-//         user: user
-//       });
-//     }
-
-//     res.render("search", {
-//       title: "Search for a user",
-//       user: user,
-//     });
-//   })
-// ];
+const usersSearchGet = [
+  searchQueryValidation,
+  asyncHandler( async (req, res) => {
+    const users = await db.searchUser(req.query.searchName);
+    console.log(users)
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("search", {
+        title: "Search for a user",
+        errors: errors.array(),
+        users: []
+      });
+    }
+    
+    res.render("search", {
+        title: "Search for a user",
+        users: users,
+      });
+  })
+]
 
 
 module.exports = {
