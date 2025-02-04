@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const { body, validationResult, query } = require("express-validator");
-const usersStorage = require("../storages/usersStorage");
+const db = require("../db/queries");
 
 // Validation
 const alphaErr = "must only contain letters.";
@@ -18,96 +18,99 @@ const validateUser = [
     .withMessage('A valid email is required')
 ];
 
-// GET Validation (check query parameters)
-const searchQueryValidation = [
-  query('searchName')
-    .trim()
-    .isAlpha().withMessage('First name must only contain letters.')
-];
 
-// Controllers
-exports.usersListGet = (req, res) => {
+// Get all users
+async function getUsernames(req, res) {
+  const usernames = await db.getAllUsernames();
   res.render("index", {
-    title: "User list",
-    users: usersStorage.getUsers(),
-  });
-};
-
-exports.usersCreateGet = (req, res) => {
-  res.render("createUser", {
-    title: "Create user",
-  });
-};
-
-exports.usersCreatePost = [
-  validateUser,
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("createUser", {
-        title: "Create user",
-        errors: errors.array(),
-      });
-    }
-    const { firstName, lastName, email } = req.body;
-    usersStorage.addUser({ firstName, lastName, email });
-    res.redirect("/");
-  }
-];
-
-exports.usersUpdateGet = (req, res) => {
-  const user = usersStorage.getUser(req.params.id);
-  res.render("updateUser", {
-    title: "Update user",
-    user: user,
-  });
-};
-
-exports.usersUpdatePost = [
-  validateUser,
-  (req, res) => {
-    const user = usersStorage.getUser(req.params.id);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("updateUser", {
-        title: "Update user",
-        user: user,
-        errors: errors.array(),
-      });
-    }
-    const { firstName, lastName, email } = req.body;
-    usersStorage.updateUser(req.params.id, { firstName, lastName, email });
-    res.redirect("/");
-  }
-];
-
-// Tell the server to delete a matching user, if any. Otherwise, respond with an error.
-exports.usersDeletePost = (req, res) => {
-  usersStorage.deleteUser(req.params.id);
-  res.redirect("/");
-};
-
-exports.usersSearchGet = [
-  searchQueryValidation,
-  asyncHandler((req, res) => {
-    const user = usersStorage.searchUser(req.query.searchName);
-    // Check for validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("search", {
-        title: "Search for a user",
-        errors: errors.array(),
-        user: user
-      });
-    }
-
-    res.render("search", {
-      title: "Search for a user",
-      user: user,
+      title: "Create user",
+      users: usernames
     });
-  })
-];
+}
+
+// Render create page
+async function createUsernameGet(req, res) {
+  res.render("createUser", {
+      title: "Create user",
+      user: []
+    });
+}
+
+// Create a user
+async function createUsernamePost(req, res) {
+  const { firstName, lastName, email } = req.body;
+  await db.insertUsername(firstName, lastName, email);
+  res.redirect("/");
+}
+
+// Delete a user
+async function deleteUsernameFromDatabase(req, res) {
+  await db.deleteUsername(req.params.id);
+  res.redirect("/");
+}
+
+// Get a user
+async function getUsernameFromDatabase(req, res) {
+  const username = await db.getUsername(req.params.id);
+
+  if (!username || username.length === 0) {
+    return res.status(404).send("User not found");
+  }
+
+  const user = username[0]
+  res.render("createUser", {
+    title: "Edit user",
+    user
+  });
+}
+
+// Update a user
+async function updateUsernamePost(req, res) {
+  const { firstName, lastName, email } = req.body;
+  await db.updateUsername(req.params.id, { firstName, lastName, email });
+  res.redirect("/");
+}
+
+// Update a user
+async function usersSearchGet(req, res) {
+  const users = await db.searchUser(req.query.searchName);
+  console.log(users)
+  res.render("search", {
+      title: "Search for a user",
+      users: users,
+    });
+}
 
 
+// exports.usersSearchGet = [
+//   searchQueryValidation,
+//   asyncHandler((req, res) => {
+//     const user = usersStorage.searchUser(req.query.searchName);
+//     // Check for validation errors
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(400).render("search", {
+//         title: "Search for a user",
+//         errors: errors.array(),
+//         user: user
+//       });
+//     }
 
+//     res.render("search", {
+//       title: "Search for a user",
+//       user: user,
+//     });
+//   })
+// ];
+
+
+module.exports = {
+  getUsernames,
+  createUsernameGet,
+  createUsernamePost,
+  deleteUsernameFromDatabase,
+  getUsernameFromDatabase,
+  updateUsernamePost,
+  usersSearchGet
+};
 

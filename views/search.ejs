@@ -14,12 +14,12 @@
         <button type="submit">Search</button>
     </form>
     
-    <% if (user && user.length > 0) { %>
-        <% user.forEach(u => { %>
-            <p>ID: <%= u.id %></p>
-            <p>First Name: <%= u.firstName %></p>
-            <p>Last Name: <%= u.lastName %></p>
-            <p>Email: <%= u.email %></p>
+    <% if (users && users.length > 0) { %>
+        <% users.forEach(user => { %>
+            <p>ID: <%= user.id %></p>
+            <p>First Name: <%= user.firstname %></p>
+            <p>Last Name: <%= user.lastname %></p>
+            <p>Email: <%= user.email %></p>
             <hr>
         <% }) %>
     <% } else { %>

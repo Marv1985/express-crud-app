@@ -3,14 +3,14 @@ const { Router } = require("express");
 const usersController = require("../controllers/usersController");
 const usersRouter = Router();
 
-usersRouter.get("/", usersController.usersListGet);
-usersRouter.get("/create", usersController.usersCreateGet);
-usersRouter.post("/create", usersController.usersCreatePost);
-usersRouter.get("/:id/update", usersController.usersUpdateGet);
+usersRouter.get("/", usersController.getUsernames);
+usersRouter.get("/create", usersController.createUsernameGet);
+usersRouter.post("/create", usersController.createUsernamePost);
+usersRouter.get("/:id/update", usersController.getUsernameFromDatabase);
 usersRouter.get("/search", (req, res) => res.render("search", {title: "Search for a user", user: []}));
 usersRouter.get("/searchUsers", usersController.usersSearchGet);
-usersRouter.post("/:id/update", usersController.usersUpdatePost);
-usersRouter.post("/:id/delete", usersController.usersDeletePost);
+usersRouter.post("/:id/update", usersController.updateUsernamePost);
+usersRouter.post("/:id/delete", usersController.deleteUsernameFromDatabase);
 
 
 module.exports = usersRouter;
